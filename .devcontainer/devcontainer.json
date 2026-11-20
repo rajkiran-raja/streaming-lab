@@ -4,15 +4,10 @@
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "postCreateCommand": "pip install -r requirements.txt && chmod +x scripts/*.sh",
+  "postCreateCommand": "pip install confluent-kafka==2.5.3",
   "forwardPorts": [8080, 9092],
   "portsAttributes": {
-    "8080": { "label": "Kafka UI", "onAutoForward": "notify" },
+    "8080": { "label": "Kafka UI" },
     "9092": { "label": "Kafka broker" }
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": ["ms-python.python", "ms-azuretools.vscode-docker"]
-    }
   }
 }
