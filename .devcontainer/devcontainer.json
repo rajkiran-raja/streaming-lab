@@ -1,0 +1,14 @@
+{
+  "name": "streaming-ingestion-lab",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "postCreateCommand": "pip install confluent-kafka==2.5.3",
+  "forwardPorts": [8080, 9092],
+  "portsAttributes": {
+    "8080": { "label": "Kafka UI" },
+    "9092": { "label": "Kafka broker" }
+  }
+}
