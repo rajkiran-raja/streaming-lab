@@ -1,1 +1,1 @@
-# streaming-lab
+confluent-kafka==2.5.3
