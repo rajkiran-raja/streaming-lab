@@ -4,7 +4,7 @@ import sys
 from confluent_kafka import Consumer, TopicPartition
 
 TOPIC = "orders"
-GROUP = sys.argv[1] if len(sys.argv) > 1 else "orders-app"
+GROUP = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else "orders-app"
 
 c = Consumer(
     {
@@ -16,7 +16,6 @@ c = Consumer(
 )
 
 if "--replay" in sys.argv:
-    # Replay: read partition 0 from offset 2 without using group balancing
     c.assign([TopicPartition(TOPIC, 0, 2)])
 else:
     c.subscribe([TOPIC])
@@ -30,7 +29,12 @@ try:
         if m.error():
             print(m.error())
             continue
-        print(m.partition(), m.offset(), m.key(), json.loads(m.value()))
+        raw = m.value().decode("utf-8", errors="replace")
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError:
+            value = f"(not JSON) {raw}"
+        print(m.partition(), m.offset(), m.key(), value)
         if "--replay" not in sys.argv:
             c.commit(message=m)
 except KeyboardInterrupt:
